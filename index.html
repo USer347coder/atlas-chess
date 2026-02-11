@@ -13,7 +13,7 @@
     <!-- Stockfish 16 (open-source engine, UCI over WebWorker) -->
     <script>
         // preload by creating a dummy worker so the CDN fetch is cached before React mounts
-        const __stockfishPreload = new Worker('https://cdn.jsdelivr.net/npm/stockfish@16/stockfish.js');
+        const __stockfishPreload = new Worker('https://cdn.jsdelivr.net/npm/stockfish@16.0.0/src/stockfish-nnue-16-single.js');
         __stockfishPreload.postMessage('uci');
         __stockfishPreload.onmessage = () => {
             __stockfishPreload.terminate();
@@ -350,7 +350,7 @@
             }, []);
 
             useEffect(() => {
-                const worker = new Worker('https://cdn.jsdelivr.net/npm/stockfish@16/stockfish.js');
+                const worker = new Worker('https://cdn.jsdelivr.net/npm/stockfish@16.0.0/src/stockfish-nnue-16-single.js');
                 engineRef.current = worker;
                 const handleMessage = (event) => {
                     const line = event.data;
@@ -593,6 +593,25 @@
                                             </div>
                                         </div>
                                     ))}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="max-w-6xl mx-auto mt-6">
+                        <div className="bg-amber-900/40 border border-amber-700/60 rounded-2xl p-4 md:p-5 text-sm text-amber-100 shadow-xl backdrop-blur">
+                            <div className="flex items-start gap-3">
+                                <span className="mt-1 inline-flex h-8 w-8 items-center justify-center rounded-full bg-amber-700/60">
+                                    <Icon name="shield-alert" />
+                                </span>
+                                <div className="space-y-2">
+                                    <p className="font-bold text-amber-200">Parody & Safety Notice</p>
+                                    <ul className="list-disc pl-5 space-y-1 text-amber-100/90">
+                                        <li>Atlas Chess is a playful, parody project for fun and experimentation; it is not a real scoring or surveillance tool.</li>
+                                        <li>Numbers, ratings, and leaderboard entries may be incomplete, experimental, or inaccurate—do not rely on them for decisions about real people.</li>
+                                        <li>Content and gameplay are for entertainment only and do not constitute legal, financial, employment, or any other professional advice.</li>
+                                        <li>We are not affiliated with any chess federation, employer, government, or monitoring program; any resemblance to real systems is coincidental.</li>
+                                    </ul>
+                                    <p className="text-amber-200/80">By continuing you agree to treat this as parody entertainment and not to use it to assess, rank, or make real-world decisions about anyone.</p>
                                 </div>
                             </div>
                         </div>

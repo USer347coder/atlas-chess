@@ -12,8 +12,18 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <!-- Stockfish 16 (open-source engine, UCI over WebWorker) -->
     <script>
-        // preload by creating a dummy worker so the CDN fetch is cached before React mounts
-        const __stockfishPreload = new Worker('https://cdn.jsdelivr.net/npm/stockfish@16.0.0/src/stockfish-nnue-16-single.js');
+        // Cross-origin workers are blocked by browsers (SecurityError).
+        // Workaround: create a same-origin blob: URL that calls importScripts().
+        const STOCKFISH_CDN = 'https://cdn.jsdelivr.net/npm/stockfish@16.0.0/src/stockfish-nnue-16-single.js';
+        function createStockfishWorker() {
+            const blob = new Blob(
+                ["importScripts('" + STOCKFISH_CDN + "');"],
+                { type: 'application/javascript' }
+            );
+            return new Worker(URL.createObjectURL(blob));
+        }
+        // preload so the CDN fetch is cached before React mounts
+        const __stockfishPreload = createStockfishWorker();
         __stockfishPreload.postMessage('uci');
         __stockfishPreload.onmessage = () => {
             __stockfishPreload.terminate();
@@ -350,7 +360,7 @@
             }, []);
 
             useEffect(() => {
-                const worker = new Worker('https://cdn.jsdelivr.net/npm/stockfish@16.0.0/src/stockfish-nnue-16-single.js');
+                const worker = createStockfishWorker();
                 engineRef.current = worker;
                 const handleMessage = (event) => {
                     const line = event.data;
